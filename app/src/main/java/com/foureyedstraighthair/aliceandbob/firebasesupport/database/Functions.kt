@@ -90,3 +90,19 @@ fun DatabaseReference.inesrt(
                 = snapshot.getValue(String::class.java)!!
     },
     config)
+
+fun DatabaseReference.browse(
+    order: SortOrder,
+    limit: Int = -1,
+    startAt: DataSnapshot? = null,
+    readForward: Boolean = true,
+    config: FuncRead.() -> Unit) {
+
+    val func = FuncRead(this, order, limit, startAt, readForward)
+    config(func)
+    func.invoke()
+}
+
+fun <T> DatabaseReference.makeBrowser(
+    order: SortOrder,
+    coder: Coder<T>) = Browser(this, order, coder)

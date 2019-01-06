@@ -4,8 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
-import com.foureyedstraighthair.aliceandbob.firebasesupport.database.Coder
-import com.foureyedstraighthair.aliceandbob.firebasesupport.database.insert
+import com.foureyedstraighthair.aliceandbob.firebasesupport.database.*
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
@@ -35,52 +34,48 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val uid = System.currentTimeMillis().toString(16)
-        val user = User("strobo jouny", 10)
-
-        FirebaseDatabase
+        val browser = FirebaseDatabase
             .getInstance()
             .getReference("users")
-            .insert(uid, user, UserCoder()) {
+            .makeBrowser(
+                SortOrder.ByDoubleChild("like", descending = true),
+                UserCoder())
 
-                onError {
-                    Log.d("mylog", "error! => ${it.message}")
-                }
+        browser.pageSizeLimit = 20
+        var forward = true
 
-                onAlreadyExists {
-                    Log.d("mylog", "$uid is already exists!")
-                }
-
-                onSuccessful {
-                    Log.d("mylog" , "saved successfully! ($uid)")
-                }
+        browser.setResultListener(object: Browser.ResultListener<User> {
+            override fun onError(error: DatabaseError) {
+                Log.d("mylog", error.message)
             }
 
-        button.setOnClickListener {
-            FirebaseDatabase
-                .getInstance()
-                .getReference("users")
-                .insert(uid, user, UserCoder()) {
-
-                    onError { error ->
-                        Log.d("mylog", "error! => ${error.message}")
-                    }
-
-                    onAlreadyExists { user ->
-                        Log.d("mylog", "$uid is already exists!")
-                    }
-
-                    onSuccessful { user ->
-                        Log.d("mylog" , "saved successfully! ($uid)")
-                    }
+            override fun onLoaded(data: List<User>) {
+                if (browser.pageSizeLimit != data.size) {
+                    forward = !forward
                 }
+
+                dataLoaded(data)
+            }
+        })
+
+        browser.loadFirst()
+
+        button.setOnClickListener {
+            if (forward) {
+                browser.loadForward()
+            } else {
+                browser.loadBackward()
+            }
         }
     }
 
-    //
-//        for (i in 0..100) {
-//            ref.push().FuncPlace(mapOf(
-//                Pair("name", "user_$i"),
+    private fun dataLoaded(data: List<User>) {
+        Log.d("mylog", "----------- page $currentPage ---------------")
+        for (user in data) {
+            Log.d("mylog", "$user")
+        }
+    }
+
     override fun onResume() {
         super.onResume()
     }
@@ -93,16 +88,56 @@ class MainActivity : AppCompatActivity() {
         Random().nextInt((endInclusive + 1) - start) +  start
 
     fun addTestData() {
-//        val ref = FirebaseDatabase
-//            .getInstance()
-//            .getReference("users")
-//                Pair("like", (0..5).random())))
-//        }
+        val ref = FirebaseDatabase
+            .getInstance()
+            .getReference("users")
+
+        for (i in 0..100) {
+            ref.push().setValue(mapOf(
+                Pair("name", "user_$i"),
+                Pair("like", (0..5).random())))
+        }
+
     }
 
     var currentPage = 1
     val pageSize = 10
     val items = mutableListOf<Pair<String, User>>()
+
+    var start: DataSnapshot? = null
+    fun readPage() {
+        val ref = FirebaseDatabase
+            .getInstance()
+            .getReference("users")
+
+        val func = FuncRead(
+            ref,
+            SortOrder.ByDoubleChild("like"),
+            31,
+            null,
+            true)
+
+        func.onCancelled {
+            Log.d("mylog", it.message)
+        }
+
+        func.onLoaded {
+            if (it.isNotEmpty()) {
+                start = it.last()
+                Log.d("mylog", "----------- page ---------------")
+                for (snapshot in it) {
+                    if (snapshot.key!! != start!!.key!!) {
+                        val value = snapshot.getValue(User::class.java)!!
+                        items.add(Pair(snapshot.key!!, value))
+                        Log.d("mylog", "uid[${snapshot.key!!}] -> $value")
+                    }
+                }
+            }
+
+        }
+
+        func.invoke()
+    }
 
     fun loadNextPage() {
 //        query?.removeEventListener(listener)
