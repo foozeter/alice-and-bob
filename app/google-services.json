@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1027432957205",
+    "firebase_url": "https://aliceandbob-b28e8.firebaseio.com",
+    "project_id": "aliceandbob-b28e8",
+    "storage_bucket": "aliceandbob-b28e8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1027432957205:android:a9340d31547b80d1",
+        "android_client_info": {
+          "package_name": "com.foureyedstraighthair.aliceandbob"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1027432957205-lr8pmog5tsv9r23ei0ane9tcelm4nsdh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.foureyedstraighthair.aliceandbob",
+            "certificate_hash": "60e6b9b383b6781cc83f64bd7c5186c0a19c7114"
+          }
+        },
+        {
+          "client_id": "1027432957205-51pgl7omku3h3b239q247thu8uij7url.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1Bg2CXk9mC0ME_0DTuMK9ZXigK2gN_CY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1027432957205-51pgl7omku3h3b239q247thu8uij7url.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

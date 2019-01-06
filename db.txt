@@ -1,0 +1,24 @@
+{
+  "userProf" : {
+
+    @read: anyone
+    @write: auth.uid == $uid
+
+    "$uid" : {
+      "name" : <string>
+      "message" : <string>
+      "icon" : <string>
+      "joinDate" : <long> // unix time
+    }
+  }
+
+  "userConfig" : {
+
+    @read: auth.uid == $uid
+    @write: auth.uid == $uid
+
+    "$uid" : {
+
+    }
+  }
+}
