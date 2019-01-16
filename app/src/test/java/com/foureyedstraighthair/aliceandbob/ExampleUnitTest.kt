@@ -6,7 +6,6 @@ import org.junit.Test
 import org.junit.Assert.*
 import java.lang.ClassCastException
 import java.lang.IllegalArgumentException
-import java.lang.RuntimeException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -66,10 +65,10 @@ class ExampleUnitTest {
 
     @Test
     fun varname() {
-        val varGoogle = VariableName.from("\$google")
-        val varApple = VariableName.from("@apple")
-        val varFacebook = VariableName.from("&facebook")
-        val varAmazon = VariableName.from("amazon")
+        val varGoogle = VariableName.inflate("\$google")
+        val varApple = VariableName.inflate("@apple")
+        val varFacebook = VariableName.inflate("&facebook")
+        val varAmazon = VariableName.inflate("amazon")
 
         println("google -> $varGoogle")
         println("apple -> $varApple")

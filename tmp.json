@@ -1,0 +1,75 @@
+{
+  "$script_name": {
+
+    "args": {
+
+    },
+
+    "body": [
+      {
+        "instruction": "let_literal",
+        "variable": "$foo",
+        "value": "&bar"
+      },
+
+      {
+        "instruction": "let_shallow",
+        "variable": "$foo",
+        "value": "$bar"
+      },
+
+      {
+        "instruction": "let_deep",
+        "variable": "$foo",
+        "value": "$bar"
+      }
+    ]
+  },
+
+  "let": {
+    "instruction": "let",
+    "variable": "foo",
+    "literal": 6
+  },
+
+  "copy": {
+    "instruction": "copy",
+    "dst": "foo",
+    "src": "bar"
+  },
+
+  "if": {
+    "instruction": "if",
+    "condition": "isTrue"
+  },
+
+
+  "else": {
+    "instruction": "else"
+  },
+
+  "for": {
+    "instruction": "for"
+  },
+
+  "while": {
+    "instruction": "while"
+  },
+
+  "end": {
+    "instruction": "end"
+  },
+
+  "echo": {
+    "instruction": "echo",
+    "message": "$message"
+  },
+
+  "script": {
+
+    "instruction": "script",
+    "name": "name",
+    "location": "file",
+    "args": ["foo", "bar", true]
+  }
+}
