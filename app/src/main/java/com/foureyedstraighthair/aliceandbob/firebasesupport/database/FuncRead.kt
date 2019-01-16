@@ -7,23 +7,24 @@ class FuncRead(
     private val sortOrder: SortOrder,
     private val pageSizeLimit: Int = -1,
     private val startAt: DataSnapshot? = null,
-    private val readForward: Boolean = true) {
+    private val readForward: Boolean = true)
+    : Func {
 
-    private var actionOnLoaded
+    private var actionOnFetch
             : (data: MutableList<DataSnapshot>) -> Unit = {}
 
     private var actionOnCancelled
             : (error: DatabaseError) -> Unit = {}
 
-    fun onLoaded(action: (data: MutableList<DataSnapshot>) -> Unit) {
-        actionOnLoaded = action
+    fun onFetch(action: (data: MutableList<DataSnapshot>) -> Unit) {
+        actionOnFetch = action
     }
 
     fun onCancelled(action: (error: DatabaseError) -> Unit) {
         actionOnCancelled = action
     }
 
-    fun invoke() = ref
+    override fun invoke() = ref
         .confirmOrder()
         .confirmLimit()
         .confirmStart()
@@ -34,7 +35,7 @@ class FuncRead(
                         = actionOnCancelled.invoke(error)
 
                 override fun onDataChange(snapshot: DataSnapshot)
-                        = actionOnLoaded(snapshot.children.toMutableList())
+                        = actionOnFetch(snapshot.children.toMutableList())
             })
 
     private fun Query.confirmOrder() = when (sortOrder) {

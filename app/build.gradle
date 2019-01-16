@@ -34,6 +34,10 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:16.0.5'
     implementation 'com.google.firebase:firebase-auth:16.1.0'
     implementation 'com.firebaseui:firebase-ui-auth:4.3.0'
+
+    implementation 'com.google.guava:guava:27.0.1-jre'
+
+    implementation 'com.eclipsesource.minimal-json:minimal-json:0.9.4'
 }
 
 apply plugin: 'com.google.gms.google-services'

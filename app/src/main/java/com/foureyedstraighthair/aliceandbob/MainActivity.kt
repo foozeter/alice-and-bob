@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
                 Log.d("mylog", error.message)
             }
 
-            override fun onLoaded(data: List<User>) {
+            override fun onFetch(data: List<User>) {
                 if (browser.pageSizeLimit != data.size) {
                     forward = !forward
                 }
@@ -58,13 +58,13 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        browser.loadFirst()
+        browser.fetchFirst()
 
         button.setOnClickListener {
             if (forward) {
-                browser.loadForward()
+                browser.fetchNext()
             } else {
-                browser.loadBackward()
+                browser.fetchPrevious()
             }
         }
     }
@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity() {
             Log.d("mylog", it.message)
         }
 
-        func.onLoaded {
+        func.onFetch {
             if (it.isNotEmpty()) {
                 start = it.last()
                 Log.d("mylog", "----------- page ---------------")

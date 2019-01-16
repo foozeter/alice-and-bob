@@ -1,6 +1,7 @@
 package com.foureyedstraighthair.aliceandbob.console
 
 
+import com.foureyedstraighthair.aliceandbob.console.database.DatabaseSchema
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.foureyedstraighthair.aliceandbob.firebasesupport.Extensions.Companion.getAsLong
@@ -14,42 +15,45 @@ class UserProf {
         val name: String,
         val message: String,
         val icon: String,
-        val joinDate: Long) {
+        val joinDate: Long)
 
-        companion object {
+    class Coder
+        : com.foureyedstraighthair.aliceandbob.firebasesupport.database.Coder<Model> {
 
-            fun deserialize(snapshot: DataSnapshot)
-                    = Model(
-                uid = snapshot.key!!,
-                name = snapshot.child("name").getAsString(),
-                message = snapshot.child("message").getAsString(),
-                icon = snapshot.child("icon").getAsString(),
-                joinDate = snapshot.child("joinDate").getAsLong())
-        }
-
-        fun serialize()
+        override fun serialize(value: Model)
                 = mapOf(
-            Pair("name", name),
-            Pair("message", message),
-            Pair("icon", icon),
-            Pair("joinDate", joinDate))
+        Pair(DatabaseSchema.Root.UserProf.Model.name, value.name),
+        Pair(DatabaseSchema.Root.UserProf.Model.message, value.message),
+        Pair(DatabaseSchema.Root.UserProf.Model.icon, value.icon),
+        Pair(DatabaseSchema.Root.UserProf.Model.joinDate, value.joinDate))
+
+        override fun deserialize(snapshot: DataSnapshot)
+                = Model(
+            snapshot.key!!,
+            snapshot.child(DatabaseSchema.Root.UserProf.Model.name).getAsString(),
+            snapshot.child(DatabaseSchema.Root.UserProf.Model.message).getAsString(),
+            snapshot.child(DatabaseSchema.Root.UserProf.Model.message).getAsString(),
+            snapshot.child(DatabaseSchema.Root.UserProf.Model.joinDate).getAsLong())
     }
 
     fun create(user: FirebaseUser,
                name: String,
                message: String,
                icon: String,
-               joinDate: Long) {
-    }
+               joinDate: Long,
+               config: FuncInsert<Model>.() -> Unit)
+            = refOf(user.uid).insert(
+        user.uid,
+        Model(user.uid, name, message, icon, joinDate),
+        Coder(),
+        config)
 
-    private fun userConfigsRef()
+    fun delete(prof: Model,config: FuncDelete.() -> Unit)
+            = refOf(prof.uid)
+
+    private fun refOf(uid: String)
             = FirebaseDatabase
-            .getInstance()
-            .getReference("userProf")
-
-    private fun refOf(user: FirebaseUser)
-            = userConfigsRef().child(user.uid)
-
-    private fun refOf(prof: Model)
-            = userConfigsRef().child(prof.uid)
+                .getInstance()
+                .getReference(DatabaseSchema.Root.UserProf.key)
+                .child(uid)
 }

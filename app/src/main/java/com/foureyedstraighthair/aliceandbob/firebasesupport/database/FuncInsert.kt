@@ -7,7 +7,8 @@ class FuncInsert<T>(
     private val parentRef: DatabaseReference,
     private val key: String,
     private val value: T,
-    private val coder: Coder<T>) {
+    private val coder: Coder<T>)
+    : Func {
 
     private var actionOnSuccessful
             : (value: T) -> Unit = { _ -> }
@@ -30,7 +31,7 @@ class FuncInsert<T>(
         actionOnAlreadyExists = listener
     }
 
-    fun invoke() {
+    override fun invoke() {
         parentRef.contains(key) {
 
                 onError { error ->

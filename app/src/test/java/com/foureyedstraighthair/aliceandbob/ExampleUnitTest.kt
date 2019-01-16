@@ -1,8 +1,12 @@
 package com.foureyedstraighthair.aliceandbob
 
+import com.foureyedstraighthair.aliceandbob.console.programming.VariableName
 import org.junit.Test
 
 import org.junit.Assert.*
+import java.lang.ClassCastException
+import java.lang.IllegalArgumentException
+import java.lang.RuntimeException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -58,5 +62,42 @@ class ExampleUnitTest {
     fun foo() {
         val t = System.currentTimeMillis().toString(16)
         println("t = $t")
+    }
+
+    @Test
+    fun varname() {
+        val varGoogle = VariableName.from("\$google")
+        val varApple = VariableName.from("@apple")
+        val varFacebook = VariableName.from("&facebook")
+        val varAmazon = VariableName.from("amazon")
+
+        println("google -> $varGoogle")
+        println("apple -> $varApple")
+        println("facebook -> $varFacebook")
+        println("amazon -> $varAmazon")
+    }
+
+    @Test
+    fun exceptionTest() {
+        try {
+            println("in try (exceptionTest)")
+            nestedExceptionTest()
+        } catch (exception: IllegalArgumentException) {
+            println("in catch (exceptionTest)")
+        } finally {
+            println("in finally (exceptionTest)")
+        }
+    }
+
+    fun nestedExceptionTest() {
+        try {
+            println("in try (nestedExceptionTest)")
+            throw ClassCastException()
+        } catch (exception: ClassCastException) {
+            println("in catch (nestedExceptionTest), throw illegalArgumentException")
+            throw IllegalArgumentException()
+        } finally {
+            println("in finally (nestedExceptionTest)")
+        }
     }
 }

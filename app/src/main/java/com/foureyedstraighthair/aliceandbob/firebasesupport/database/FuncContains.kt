@@ -6,7 +6,8 @@ import com.google.firebase.database.DatabaseReference
 
 class FuncContains(
     private val ref: DatabaseReference,
-    private val key: String) {
+    private val key: String)
+    : Func {
 
     private var actionOnError
             : (error: DatabaseError) -> Unit = { _ -> }
@@ -29,7 +30,8 @@ class FuncContains(
         actionOnNotExists = action
     }
 
-    fun invoke()
+
+    override fun invoke()
             = ref.child(key).once {
 
         onCancelled {

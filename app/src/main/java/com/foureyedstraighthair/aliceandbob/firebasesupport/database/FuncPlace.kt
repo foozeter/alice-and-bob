@@ -5,7 +5,8 @@ import com.google.firebase.database.DatabaseReference
 
 class FuncPlace(
     private val ref: DatabaseReference,
-    private val value: Any) {
+    private val value: Any)
+    : Func {
 
     private var actionOnSuccessful
             : (ref: DatabaseReference) -> Unit = { _ -> }
@@ -21,7 +22,7 @@ class FuncPlace(
         actionOnError = action
     }
 
-    fun invoke() {
+    override fun invoke() {
         ref.setValue(value, object: DatabaseReference.CompletionListener {
             override fun onComplete(error: DatabaseError?, ref: DatabaseReference) {
                 if (error != null) actionOnError.invoke(error)

@@ -20,27 +20,29 @@ class Browser<T>(
         resultListener = listener
     }
 
-    fun loadFirst() = load(null, !sortOrder.descending)
+    fun fetchFirst() = fetch(null, !sortOrder.descending)
 
-    fun loadForward() {
+    fun fetchLast() = fetch(null, sortOrder.descending)
+
+    fun fetchNext() {
         if (currentPageFirst == null || currentPageLast == null)
             throw IllegalStateException(
-                "Call Browser#loadFirst() before call this method.")
+                "Call Browser#fetchFirst() before call this method.")
 
-        if (sortOrder.descending) load(currentPageFirst, false)
-        else load(currentPageLast, true)
+        if (sortOrder.descending) fetch(currentPageFirst, false)
+        else fetch(currentPageLast, true)
     }
 
-    fun loadBackward() {
+    fun fetchPrevious() {
         if (currentPageFirst == null || currentPageLast == null)
             throw IllegalStateException(
-                "Call Browser#loadFirst() before call this method.")
+                "Call Browser#fetchFirst() before call this method.")
 
-        if (sortOrder.descending) load(currentPageLast, true)
-        else load(currentPageFirst, false)
+        if (sortOrder.descending) fetch(currentPageLast, true)
+        else fetch(currentPageFirst, false)
     }
 
-    private fun load(
+    private fun fetch(
         startAt: DataSnapshot?,
         browseForward: Boolean) {
 
@@ -53,7 +55,7 @@ class Browser<T>(
                 resultListener?.onError(it)
             }
 
-            onLoaded { data ->
+            onFetch { data ->
 
                 if (data.isNotEmpty()) {
                     currentPageFirst = data.first()
@@ -65,7 +67,7 @@ class Browser<T>(
                     }
                 }
 
-                resultListener?.onLoaded(
+                resultListener?.onFetch(
                     if (sortOrder.descending) data.invert().map { coder.deserialize(it) }
                     else data.map { coder.deserialize(it) })
             }
@@ -79,6 +81,6 @@ class Browser<T>(
 
     interface ResultListener<T> {
         fun onError(error: DatabaseError)
-        fun onLoaded(data: List<T>)
+        fun onFetch(data: List<T>)
     }
 }

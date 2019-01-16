@@ -19,11 +19,17 @@ fun DatabaseReference.contains(
     key: String, config: FuncContains.() -> Unit) {
     val func = FuncContains(this, key)
     config(func)
-    func.invoke()
+    func()
 }
 
 fun DatabaseReference.place(value: Any, config: FuncPlace.() -> Unit) {
     val func = FuncPlace(this, value)
+    config(func)
+    func.invoke()
+}
+
+fun DatabaseReference.delete(config: FuncDelete.() -> Unit) {
+    val func = FuncDelete(this)
     config(func)
     func.invoke()
 }

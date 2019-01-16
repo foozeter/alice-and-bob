@@ -5,7 +5,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 
-class FuncOnce(private val ref: DatabaseReference) {
+class FuncOnce(
+    private val ref: DatabaseReference)
+    : Func {
 
     private var actionOnFetch
             : (snapshot: DataSnapshot) -> Unit = { _ -> }
@@ -21,7 +23,7 @@ class FuncOnce(private val ref: DatabaseReference) {
         actionOnCancelled = action
     }
 
-    fun invoke() {
+    override fun invoke() {
         ref.addListenerForSingleValueEvent(object: ValueEventListener {
 
             override fun onCancelled(error: DatabaseError)
