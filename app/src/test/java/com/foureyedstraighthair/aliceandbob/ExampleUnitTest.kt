@@ -100,4 +100,17 @@ class ExampleUnitTest {
             println("in finally (nestedExceptionTest)")
         }
     }
+
+    @Test
+    fun toStringTest() {
+        assertEquals(100L, "100".toLongOrNull())
+        assertEquals(null, "100.0".toLongOrNull())
+        assertEquals(null, "3.14".toLongOrNull())
+        assertEquals(1L, "001".toLongOrNull())
+        assertEquals(null, "0.0".toLongOrNull())
+
+        assertEquals(null, "100".toDoubleOrNull())
+        assertEquals(3.14, "3.14".toDoubleOrNull())
+        assertEquals(0.0, "00.0".toDoubleOrNull())
+    }
 }
